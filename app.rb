@@ -2,17 +2,17 @@ require "docker-api"
 require "sinatra"
 
 set :bind, '0.0.0.0'
+Docker.url = "http://127.0.0.1:4243/"
+
 
 get "/" do
 @image = Docker::Image.all
-Docker.url = "http://127.0.0.1:4243/"
 cons = Docker::Container.all(:running => true)
 @cont = Docker::Container.all(:running => true)
   erb :index
 end
 
 post "/run" do
- Docker.url = "http://127.0.0.1:4243/"
  @img = @params[:img]
  @port = @params[:port]
 @container = Docker::Container.create(
