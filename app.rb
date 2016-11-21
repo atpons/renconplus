@@ -33,5 +33,5 @@ puts @CNAME
 puts @PORT
 
 get "/" do
-  :erb index
+  erb :index
 end
