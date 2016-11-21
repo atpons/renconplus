@@ -3,6 +3,8 @@ require "sinatra"
 
 Docker.url = "http://127.0.0.1:4243/"
 cons = Docker::Container.all(:running => true)
+cont = Docker::Container.all(:running => true)
+
 
 @CID = []
 @PORT = []
@@ -29,3 +31,7 @@ puts @CID
 puts @IMG
 puts @CNAME
 puts @PORT
+
+get "/" do
+  :erb index
+end

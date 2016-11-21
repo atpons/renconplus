@@ -1,0 +1,15 @@
+<html>
+  <head><title>Rencon</title></head>
+  <body>
+    <tr><th>CID</th><th>IMG</th><th>CNAME</th>PORT<th>DEL</th>
+      <% @cont.each do |con| %>
+        <th><%= con.json["Id"] =></th>
+        <th><%= con.json["Config"]["Image"] =></th>
+        <th><%= con.json["Name"]=></th>
+        <th><%= con.json["NetworkSettings"]["Ports"] =></th>
+        <th>del</th>
+    <% end %>
+    </tr>
+  
+  </body>
+</html>
