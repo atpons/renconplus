@@ -1,5 +1,6 @@
 Rencon
 ======================
+## **IMPORTANT:** NOW, Not running without our environment.
 Rental Container with prepared CMS.
 It is provided by Docker, Ruby, Sinatra, [swipely/docker-api](https://github.com/swipely/docker-api).
 
