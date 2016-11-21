@@ -10,19 +10,10 @@ RUN echo "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unic
 RUN apt-get -y install php libapache2-mod-php php-mysql
 RUN service apache2 restart
 RUN echo -e "<Directory /var/www/html/wordpress>\nAllowOverride All\n</Directory>" >> /etc/apache2/apache2.conf
-RUN cd && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x wp-cli.phar
-RUN mv wp-cli.phar /usr/local/bin/wp
+RUN cd && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 RUN wp --allow-root core download --locale=ja --path=/tmp/wordpress
-RUN touch /tmp/wordpress/.htaccess
-RUN chmod 660 /tmp/wordpress/.htaccess
-RUN cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
-RUN mkdir /tmp/wordpress/wp-content/upgrade
-RUN cp -a /tmp/wordpress/. /var/www/html/wordpress
-RUN chown -R root:www-data /var/www/html/wordpress
-RUN chmod g+w /var/www/html/wordpress/wp-content
-RUN chmod -R g+w /var/www/html/wordpress/wp-content/themes
-RUN chmod -R g+w /var/www/html/wordpress/wp-content/plugins
+RUN touch /tmp/wordpress/.htaccess && chmod 660 /tmp/wordpress/.htaccess
+RUN cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php && mkdir /tmp/wordpress/wp-content/upgrade && cp -a /tmp/wordpress/. /var/www/html/wordpress && chown -R root:www-data /var/www/html/wordpress && chmod g+w /var/www/html/wordpress/wp-content && chmod -R g+w /var/www/html/wordpress/wp-content/themes && chmod -R g+w /var/www/html/wordpress/wp-content/plugins
 
 RUN sed /var/www/html/wordpress/wp-config.php -e " \
   /^define('DB_NAME'/c     define('DB_NAME', 'wordpress'); \
