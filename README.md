@@ -45,7 +45,8 @@ If you provide Rencon, you will use reverse proxy: nginx, Apache, Unicorn.
 Image Requirements for Rencon
 ------------------------------
 Rencon need customized Docker image.
-Sample `Dockerfile` is `images` directory and please read this.
+
+There are sample `Dockerfile` for some CMS, and please read this.
 
 
 + `/bin/bash` is installed on Docker image [for administration.]
