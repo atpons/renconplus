@@ -1,15 +1,47 @@
 <html>
   <head><title>Rencon</title></head>
   <body>
-    <tr><th>CID</th><th>IMG</th><th>CNAME</th>PORT<th>DEL</th>
-      <% @cont.each do |con| %>
-        <th><%= con.json["Id"] =></th>
-        <th><%= con.json["Config"]["Image"] =></th>
-        <th><%= con.json["Name"]=></th>
-        <th><%= con.json["NetworkSettings"]["Ports"] =></th>
-        <th>del</th>
-    <% end %>
-    </tr>
-  
+<h1>Rencon</h1>
+<h2>Easy CMS Hosting</h2>
+
+<form method="post" action="run">
+<p>
+Choose Image: 
+<select name="img">
+<% @image.each do |img| %>
+<option value="<%= img.json["RepoTags"][0] %>"><%= img.json["RepoTags"][0] %></option>
+<% end %>
+</select>
+</p>
+<p><input type="submit" value="Launch"></p>
+
+</form>
+<h2>How to use</h2>
+<p>1. You choose image and launch button.</p>
+<p>2. Docker server deploy selected image and bind a port.</p>
+<p>3. It works! You can enjoy the CMS you choosed.</p>
+
+<table border>
+<tr>
+<td>Container ID</td>
+<td>Image</td>
+<td>Container Name</td>
+<td>Port</td>
+<td>Stop</td>
+</tr>
+<% @cont.each do |entry| %>
+<tr>
+<td><%= entry.json["Id"] %></td>
+<td><%= entry.json["Config"]["Image"] %></td>
+<td><%= entry.json["Name"] %></td>
+<td><%= entry.json["NetworkSettings"]["Ports"] %></td>
+<td>
+<a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
+</td>
+</tr>
+<% end %>
+</table>
+
+
   </body>
 </html>
