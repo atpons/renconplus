@@ -27,7 +27,7 @@ post "/run" do
     'Cmd': [ '/bin/bash' ]
   ) 
   @container.start
-  @container.exec(["./run.sh"], detach: true)
+  @container.exec(["sh","~/run.sh"], detach: true)
   erb :run
 end
 

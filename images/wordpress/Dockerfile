@@ -6,10 +6,12 @@ RUN apt-get -y install apache2
 RUN echo "mysql-server mysql-server/root_password password root" | debconf-set-selections && \
     echo "mysql-server mysql-server/root_password_again password root" | debconf-set-selections && \
     apt-get -y install mysql-server
-RUN echo "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;" | mysql -uroot -proot
+RUN service mysql restart && echo "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;" | mysql -uroot -proot
 RUN apt-get -y install php libapache2-mod-php php-mysql
 RUN service apache2 restart
-RUN echo -e "<Directory \/var\/www\/html\/wordpress>\nAllowOverride All\n<\/Directory>" >> /etc/apache2/apache2.conf
+RUN echo "<Directory /var/www/html/wordpress>" >> /etc/apache2/apache2.conf
+RUN echo "AllowOverride All" >> /etc/apache2/apache2.conf
+RUN echo "</Directory>" >> /etc/apache2/apache2.conf
 RUN cd && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 RUN wp --allow-root core download --locale=ja --path=/tmp/wordpress
 RUN touch /tmp/wordpress/.htaccess && chmod 660 /tmp/wordpress/.htaccess
@@ -40,7 +42,7 @@ RUN cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-availabl
 RUN sed -i -e "12 s/html/html\/wordpress/g" /etc/apache2/sites-available/010-wordpress.conf
 RUN a2dissite 000-default
 RUN a2ensite 010-wordpress
-RUN service restart apache2
-
-RUN cd && echo -e "service mysql restart\nservice apache2 restart" > run.sh
-RUN cd && chmod 777 run.sh
+RUN cat /etc/apache2/apache2.conf
+RUN service apache2 restart
+RUN cd && echo "service mysql restart" >> run.sh && echo "service apache2 restart" >> run.sh
+RUN cd && chmod 777 run.sh && cat run.sh
