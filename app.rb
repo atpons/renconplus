@@ -15,19 +15,14 @@ end
 
 post "/run" do
   @img = @params[:img]
-  @port = @params[:port]
   @container = Docker::Container.create(
     'Image' => @img,
-    'OpenStdin' => true,
     'ExposedPorts' => { '80/tcp' => {} },
-    'Tty' => true,
     'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
       '80/tcp' => [{}]
-    }},
-    'Cmd': [ '/bin/bash' ]
-  ) 
+    }}
+  )
   @container.start
-  @container.exec(["./run.sh"], detach: true)
   erb :run
 end
 
@@ -37,4 +32,3 @@ get "/stop" do
   @container.stop
   erb :stop
 end
-
