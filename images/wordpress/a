@@ -1,0 +1,35 @@
+#!/bin/sh
+
+DBNAME="wpd" #データベース名
+DBUSER="root" #データベースユーザ名
+DBPASS="root" #データベースパス
+DBHOST="localhost" #データベースホスト
+DBPREFIX="wp_" #テーブルのプレフィックス ex. wp_
+
+# ############
+
+SITE_URL="http://localhost/" #サイトURL ex.http://example.com/
+SITE_TITLE="wakayama" #サイトタイトル
+ADMIN_USER="wakayama" #WP管理者ユーザー名
+ADMIN_PASSWORD="wakayama" #WP管理者パスワード
+ADMIN_EMAIL="wakayama@wakayama.edu" #WP管理者 メールアドレス
+
+# インストールしておきたいプラグインをこの配列に入れておく
+PLUGINS=("wp-multibyte-patch","duplicate-post")
+
+# ############
+
+# Download Wordpress
+wp core download --locale=ja
+
+# SetUp wp-config
+wp core config --dbname=${DBNAME} --dbuser=${DBUSER} --dbpass=${DBPASS} --dbhost=${DBHOST} --dbprefix=${DBPREFIX}
+
+# Wordpress Install
+wp core install --url=${SITE_URL} --title=${SITE_TITLE} --admin_user=${ADMIN_USER} --admin_password=${ADMIN_PASSWORD} --admin_email=${ADMIN_EMAIL}
+
+# Plugins Download & Install
+for plugin in ${PLUGINS[@]}
+do
+  wp plugin install $plugin --activate
+done
