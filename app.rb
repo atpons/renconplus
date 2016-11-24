@@ -35,3 +35,9 @@ get "/stop" do
   @container.stop
   erb :stop
 end
+
+error do
+  @title = "Error"
+  @error = env["sinatra.error"].message
+  erb :error
+end
