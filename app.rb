@@ -7,6 +7,7 @@ Docker.url = "http://127.0.0.1:4243/"
 
 
 get "/" do
+  @title = "Top"
   @image = Docker::Image.all
   cons = Docker::Container.all(:running => true)
   @cont = Docker::Container.all(:running => true)
@@ -14,6 +15,7 @@ get "/" do
 end
 
 post "/run" do
+  @title = "Run"
   @img = @params[:img]
   @container = Docker::Container.create(
     'Image' => @img,
@@ -27,6 +29,7 @@ post "/run" do
 end
 
 get "/stop" do
+  @title = "Stop"
   @id = params["id"]
   @container = Docker::Container.get(@id)
   @container.stop

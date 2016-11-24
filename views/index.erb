@@ -1,9 +1,3 @@
-<html>
-  <head><title>Rencon</title></head>
-  <body>
-<h1>Rencon</h1>
-<h2>Easy CMS Hosting</h2>
-
 <form method="post" action="run">
 <p>
 Choose Image: 
@@ -34,14 +28,15 @@ Choose Image:
 <td><%= entry.json["Id"] %></td>
 <td><%= entry.json["Config"]["Image"] %></td>
 <td><%= entry.json["Name"] %></td>
-<td><%= entry.json["NetworkSettings"]["Ports"] %></td>
+<td>
+<script>
+  var port_ = <%= entry.json["NetworkSettings"]["Ports"]["80/tcp"][0]["HostPort"] %>;
+  var uri_<%= entry.json["Id"] %> = "http://" + host + ":" + port;
+</script>
+<a href="javascript:location.href=uri_<%= entry.json["Id"] %>"><%= entry.json["NetworkSettings"]["Ports"]["80/tcp"][0]["HostPort"] %></a></td>
 <td>
 <a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
 </td>
 </tr>
 <% end %>
 </table>
-
-
-  </body>
-</html>
