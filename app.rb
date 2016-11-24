@@ -1,6 +1,7 @@
 require "docker-api"
 require "sinatra"
 
+set :environment, :production
 set :bind, '0.0.0.0'
 # [Important] Please setup your Docker Host
 Docker.url = "http://127.0.0.1:4243/"
