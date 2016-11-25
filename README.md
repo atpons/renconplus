@@ -11,6 +11,7 @@ Installation
 + Ruby 2.3+
 + Sinatra
 + swipely/docker-api
++ dotenv
 
 ### Enable Docker Remote API
 If you only installed Docker, you can't use Rencon.
