@@ -34,7 +34,7 @@ and you can test:
 Using Rencon
 -------------
 ### Run
-**IMPORTANT:** You must modify `app.rb` if your Docker API endpoint is not `http://localhost:4243/`.
+**IMPORTANT:** You must modify `.env` if your Docker API endpoint is not `http://localhost:4243/`.
 
 
 First, you need `bundle install`, and `app.rb` is Rencon Application.
