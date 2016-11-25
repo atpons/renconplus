@@ -1,11 +1,12 @@
 require "docker-api"
 require "sinatra"
+require "dotenv"
 
+Dotenv.load
 set :environment, :production
 set :bind, '0.0.0.0'
 # [Important] Please setup your Docker Host
-Docker.url = "http://127.0.0.1:4243/"
-
+Docker.url = ENV["DOCKER_HOST"]
 
 get "/" do
   @title = "Top"
