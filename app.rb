@@ -19,8 +19,12 @@ end
 post "/run" do
   @title = "Run"
   @img = @params[:img]
+  @env = @params[:env].split(",")
+  @cmd = @params[:cmd].split(",")
   @container = Docker::Container.create(
     'Image' => @img,
+    'Env' => @env,
+    'Cmd' => @cmd,
     'ExposedPorts' => { '80/tcp' => {} },
     'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
       '80/tcp' => [{}]
