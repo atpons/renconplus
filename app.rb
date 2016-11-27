@@ -1,12 +1,24 @@
 require "docker-api"
 require "sinatra"
+require "dotenv"
 
+def empty(str)
+   case str.empty?
+   when true
+       return ""
+   else
+       return str.split(/\s*,\s*/)
+   end
+end
+
+Dotenv.load
+set :environment, :production
 set :bind, '0.0.0.0'
 # [Important] Please setup your Docker Host
-Docker.url = "http://127.0.0.1:4243/"
-
+Docker.url = ENV["DOCKER_HOST"]
 
 get "/" do
+  @title = "Top"
   @image = Docker::Image.all
   cons = Docker::Container.all(:running => true)
   @cont = Docker::Container.all(:running => true)
@@ -14,27 +26,33 @@ get "/" do
 end
 
 post "/run" do
+  @title = "Run"
   @img = @params[:img]
-  @port = @params[:port]
+  @environment = empty(@params[:environment])
+  @command = empty(@params[:command])
   @container = Docker::Container.create(
     'Image' => @img,
-    'OpenStdin' => true,
+    'Env' => @environment,
+    'Cmd' => @command,
     'ExposedPorts' => { '80/tcp' => {} },
-    'Tty' => true,
     'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
       '80/tcp' => [{}]
-    }},
-    'Cmd': [ '/bin/bash' ]
-  ) 
+    }}
+  )
   @container.start
-  @container.exec(["./run.sh"], detach: true)
   erb :run
 end
 
 get "/stop" do
+  @title = "Stop"
   @id = params["id"]
   @container = Docker::Container.get(@id)
   @container.stop
   erb :stop
 end
 
+error do
+  @title = "Error"
+  @error = env["sinatra.error"].message
+  erb :error
+end
