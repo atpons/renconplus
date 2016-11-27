@@ -1,6 +1,5 @@
 Rencon
 ======================
-## **NOTICE:** It can running with your environment. :)
 Rental Container with prepared CMS.
 It is provided by Docker, Ruby, Sinatra, [swipely/docker-api](https://github.com/swipely/docker-api).
 
@@ -47,6 +46,9 @@ If you provide Rencon, you will use a reverse proxy: nginx, Apache, Unicorn.
 Image Compabilities for Rencon (Docker Hub)
 ------------------------------
 + `tutum/wordpress`
++ `drupal`
+
+Maybe you can run any containers from Docker Hub.
 
 License
 --------
