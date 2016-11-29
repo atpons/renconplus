@@ -5,7 +5,8 @@ require "dotenv"
 def empty(str)
    case str.empty?
    when true
-       return ""
+       return nil
+
    else
        return str.split(/\s*,\s*/)
    end
@@ -28,12 +29,12 @@ end
 post "/run" do
   @title = "Run"
   @img = @params[:img]
-  @environment = empty(@params[:environment])
-  @command = empty(@params[:command])
+  @environment_key = empty(@params[:environment])
+  @command_key = empty(@params[:command])
   @container = Docker::Container.create(
     'Image' => @img,
-    'Env' => @environment,
-    'Cmd' => @command,
+    'Env' => @environment_key,
+    'Cmd' => @command_key,
     'ExposedPorts' => { '80/tcp' => {} },
     'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
       '80/tcp' => [{}]
