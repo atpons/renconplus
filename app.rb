@@ -8,7 +8,7 @@ require "json"
 def empty(str)
    case str.empty?
    when true
-       return ""
+       return []
    else
        return str.split(/\s*,\s*/)
    end
@@ -77,6 +77,7 @@ post "/run" do
   @title = "Run"
   @img = @params[:img]
   @environment = empty(@params[:environment])
+  @environment.push("USER_ID=#{twitter.user.id}")
   @command = empty(@params[:command])
   @container = Docker::Container.create(
     'Image' => @img,
