@@ -14,10 +14,16 @@ def empty(str)
    end
 end
 
+# Loading env
 Dotenv.load
+if ENV["TWITTER_CONSUMER_KEY"] == "" || ENV["TWITTER_CONSUME_SECRET"] == ""
+  puts "You must put Twitter API Keys to .env file, please visit: https://apps.twitter.com"
+  exit
+end
+
+
 set :environment, :production
 set :bind, '0.0.0.0'
-# [Important] Please setup your Docker Host
 Docker.url = ENV["DOCKER_HOST"]
 
 configure do
@@ -68,24 +74,25 @@ get "/" do
   @screen_name = twitter.user.screen_name
   @title = "Top"
   @image = Docker::Image.all
-  @cont = Docker::Container.all(all: true, filters: { label: [ "USER_ID=#{twitter.user.id}" ] }.to_json)
+  @cont = Docker::Container.all(all: true, filters: { label: [ "com.rencon.atpons.userid=#{twitter.user.id}" ] }.to_json)
   erb :index
 end
 
 post "/run" do
   @title = "Run"
+  @oauth = session[:twitter_oauth]
   @img = @params[:img]
   @environment = empty(@params[:environment])
   @command = empty(@params[:command])
   @container = Docker::Container.create(
     'Image' => @img,
+    "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
     'Env' => @environment,
     'Cmd' => @command,
     'ExposedPorts' => { '80/tcp' => {} },
     'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
-      '80/tcp' => [{}],
-    "Labels" => {"USER_ID" => twitter.user.id}
-    }}
+      '80/tcp' => [{}]}
+    }
   )
   @container.start
   erb :run
