@@ -44,7 +44,11 @@ end
 
 before do
   pass if request.path_info =~ /^\/auth\//
-  redirect to('/auth/twitter') unless logged_in?
+  redirect to('/not_logged_in') unless logged_in?
+end
+
+get "/not_logged_in" do
+  erb :not_logged_in
 end
 
 get '/auth/twitter/callback' do
