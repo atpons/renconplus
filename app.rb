@@ -68,8 +68,7 @@ get "/" do
   @screen_name = twitter.user.screen_name
   @title = "Top"
   @image = Docker::Image.all
-  cons = Docker::Container.all(:running => true)
-  @cont = Docker::Container.all(:running => true)
+  @cont = Docker::Container.all(all: true, filters: { label: [ "USER_ID=#{twitter.user.id}" ] }.to_json)
   erb :index
 end
 
@@ -77,7 +76,6 @@ post "/run" do
   @title = "Run"
   @img = @params[:img]
   @environment = empty(@params[:environment])
-  @environment.push("USER_ID=#{twitter.user.id}")
   @command = empty(@params[:command])
   @container = Docker::Container.create(
     'Image' => @img,
@@ -85,7 +83,8 @@ post "/run" do
     'Cmd' => @command,
     'ExposedPorts' => { '80/tcp' => {} },
     'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
-      '80/tcp' => [{}]
+      '80/tcp' => [{}],
+    "Labels" => {"USER_ID" => twitter.user.id}
     }}
   )
   @container.start
