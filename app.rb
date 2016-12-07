@@ -82,7 +82,7 @@ post "/run" do
     'Env' => @environment,
     'Cmd' => @command,
     'ExposedPorts' => { '80/tcp' => {} },
-    'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
+    'HostConfig' => { 'Privileged' => true,"Memory" => "256000","CpuPeriod" => "50000","CpuQuota" => "25000" , 'PortBindings' => {
       '80/tcp' => [{}],
     "Labels" => {"USER_ID" => twitter.user.id}
     }}
