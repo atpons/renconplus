@@ -90,7 +90,7 @@ post "/run" do
     'Env' => @environment,
     'Cmd' => @command,
     'ExposedPorts' => { '80/tcp' => {} },
-    'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
+    'HostConfig' => { "Memory"=>268435456,'Privileged' => true, 'PortBindings' => {
       '80/tcp' => [{}]}
     }
   )
