@@ -1,6 +1,7 @@
-Rencon
+Rencon Plus
 ======================
-Rental Container with prepared CMS.
+Rencon Plus is providing Container as a Service.
+This project is forked by atpons/rencon.
 It is provided by Docker, Ruby, Sinatra, [swipely/docker-api](https://github.com/swipely/docker-api).
 
 Installation
@@ -41,12 +42,7 @@ First, you need `bundle install`, and `app.rb` is Rencon Application.
 
 You can run with `ruby app.rb` and getting started.
 
-If you provide Rencon, you will use a reverse proxy: nginx, Apache, Unicorn.
-
-Image Compabilities for Rencon (Docker Hub)
-------------------------------
-+ `tutum/wordpress`
-+ `drupal`
+If you provide Rencon, you will use a reverse proxy: nginx, Apache, Unicorn
 
 Maybe you can run any containers from Docker Hub.
 
