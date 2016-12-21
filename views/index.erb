@@ -37,13 +37,7 @@ Choose Image:
 <td><%= entry.json["Id"] %></td>
 <td><%= entry.json["Config"]["Image"] %></td>
 <td><%= entry.json["Name"] %></td>
-<td>
-<script>
-  var host = location.hostname;
-  var port = <%= entry.json["NetworkSettings"]["Ports"]["80/tcp"][0]["HostPort"] %>;
-  var uri_<%= entry.json["Id"] %> = "http://" + host + ":" + port;
-</script>
-<a href="javascript:location.href=uri_<%= entry.json["Id"] %>"><%= entry.json["NetworkSettings"]["Ports"]["80/tcp"][0]["HostPort"] %></a></td>
+<td>XXX</td>
 <td>
 <a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
 </td>
