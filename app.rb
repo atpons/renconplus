@@ -101,6 +101,7 @@ end
 get "/admin" do
   if ENV["ADMIN_TWITTER_USER_ID"].to_s == twitter.user.id.to_s
      @images = Docker::Image.all
+      @cont = Docker::Container.all(all: true)
   else
     redirect "/"
   end

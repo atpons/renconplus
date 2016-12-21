@@ -1,3 +1,4 @@
+<h2>Image</h2>
 <a href="/logout">Logout</a><br/>
 <form method="post" action="run">
 <p>
@@ -9,4 +10,25 @@ Choose Image:
 <option value="<%= img.json["RepoTags"][0] %>"><%= img.json["RepoTags"][0] %></option>
 <% end %>
 </select>
+<p><input type="submit" value="Delete Image"></p>
+
+<table border>
+<tr>
+<td>Container ID</td>
+<td>Image</td>
+<td>Container Name</td>
+<td>Stop</td>
+</tr>
+<% @cont.each do |entry| %>
+<tr>
+<td><%= entry.json["Id"] %></td>
+<td><%= entry.json["Config"]["Image"] %></td>
+<td><%= entry.json["Name"] %></td>
+<td>
+<a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
+</td>
+</tr>
+<% end %>
+</table>
+
 </p>
