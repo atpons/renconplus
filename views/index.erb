@@ -1,52 +1,11 @@
 <a href="/logout">Logout</a><br/>
-<p>Welcome,  <%= @screen_name %>!</p>
 <form method="post" action="run">
 <p>
 Choose Image: 
 <p>Image: <input type="text" name="image" size="40"></p>
 <p>You can choose only a image that published on Docker Hub.</p>
-<!--
 <select name="img">
-<% @image.each do |img| %>  
+<% @images.each do |img| %>  
 <option value="<%= img.json["RepoTags"][0] %>"><%= img.json["RepoTags"][0] %></option>
 <% end %>
---!>
 </select>
-</p>
-<p>Port: <input type="text" name="port" size="40"></p>
-<p>ENV: <input type="text" name="environment" size="40"></p>
-<p>CMD: <input type="text" name="command" size="40"></p>
-<p><input type="submit" value="Launch"></p>
-<p>Binding port is automatically ports to random ports.</p>
-</form>
-<h2>How to use</h2>
-<p>1. You choose image and launch button.</p>
-<p>2. Docker server deploy selected image and bind a port.</p>
-<p>3. It works! You can enjoy the container you choosed.</p>
-
-<table border>
-<tr>
-<td>Container ID</td>
-<td>Image</td>
-<td>Container Name</td>
-<td>Port</td>
-<td>Stop</td>
-</tr>
-<% @cont.each do |entry| %>
-<tr>
-<td><%= entry.json["Id"] %></td>
-<td><%= entry.json["Config"]["Image"] %></td>
-<td><%= entry.json["Name"] %></td>
-<td>
-<script>
-  var host = location.hostname;
-  var port = <%= entry.json["NetworkSettings"]["Ports"]["80/tcp"][0]["HostPort"] %>;
-  var uri_<%= entry.json["Id"] %> = "http://" + host + ":" + port;
-</script>
-<a href="javascript:location.href=uri_<%= entry.json["Id"] %>"><%= entry.json["NetworkSettings"]["Ports"]["80/tcp"][0]["HostPort"] %></a></td>
-<td>
-<a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
-</td>
-</tr>
-<% end %>
-</table>
