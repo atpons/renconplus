@@ -14,6 +14,7 @@ Installation
 + dotenv
 + eventmachine
 + omniauth
+
 Please read `Gemfile` for some dependence gems.
 
 ### Enable Docker Remote API
