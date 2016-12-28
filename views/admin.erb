@@ -3,8 +3,7 @@
 <form method="post" action="delete">
 <p>
 Choose Image: 
-<p>Image: <input type="text" name="image" size="40"></p>
-<select name="img">
+<select name="image">
 <% @images.each do |img| %>  
 <option value="<%= img.json["RepoTags"][0] %>"><%= img.json["RepoTags"][0] %></option>
 <% end %>

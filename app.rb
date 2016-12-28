@@ -121,9 +121,22 @@ end
 
 get "/stop" do
   @title = "Stop"
-  @id = params["id"]
+  @id = @params[:id]
   @container = Docker::Container.get(@id)
   @container.stop
+  erb :stop
+end
+
+post "/delete" do
+  @title = "Delete"
+  @name = params[:image]
+  Docker::Image.all.each do |i|
+    if i.json["RepoTags"][0] == @name
+      @id = i.json["Id"]
+    end
+  end
+  image = Docker::Image.get(@id)
+  image.remove(:force => true)
   erb :stop
 end
 
