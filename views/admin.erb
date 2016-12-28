@@ -17,12 +17,14 @@ Choose Image:
 <td>Container ID</td>
 <td>Image</td>
 <td>Container Name</td>
+<td>Label</td>
 <td>Stop</td>
 </tr>
 <% @cont.each do |entry| %>
 <tr>
 <td><%= entry.json["Id"] %></td>
 <td><%= entry.json["Config"]["Image"] %></td>
+<td><%= entry.json["Labels"] %></td>
 <td><%= entry.json["Name"] %></td>
 <td>
 <a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
