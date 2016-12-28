@@ -2,13 +2,9 @@
 <p>Welcome,  <%= @screen_name %>!</p>
 <form method="post" action="run">
 <p>
-Choose Image: 
+Choose Image:
 <p>Image: <input type="text" name="image" size="40"></p>
 <p>You can choose only a image that published on Docker Hub.</p>
-<!--
-<select name="img">
-<% @image.each do |img| %>  
-<option value="<%= img.json["RepoTags"][0] %>"><%= img.json["RepoTags"][0] %></option>
 <% end %>
 --!>
 </select>
@@ -37,7 +33,7 @@ Choose Image:
 <td><%= entry.json["Id"] %></td>
 <td><%= entry.json["Config"]["Image"] %></td>
 <td><%= entry.json["Name"] %></td>
-<td>XXX</td>
+<td><%= entry.json["NetworkSettings"]["Ports"] %></td>
 <td>
 <a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
 </td>
