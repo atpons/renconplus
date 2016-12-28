@@ -6,12 +6,12 @@ require "twitter"
 require "json"
 
 def empty(str)
-   case str.empty?
-   when true
-       return []
-   else
-       return str.split(/\s*,\s*/)
-   end
+  case str.empty?
+  when true
+    return []
+  else
+    return str.split(/\s*,\s*/)
+  end
 end
 
 # Loading env
@@ -58,7 +58,7 @@ get "/auth/not_logged_in" do
 end
 
 after do
-  
+
 end
 
 get '/auth/twitter/callback' do
@@ -84,28 +84,31 @@ post "/run" do
   @img = @params[:img]
   @environment = empty(@params[:environment])
   @command = empty(@params[:command])
-  @container = Docker::Container.create(
-    'Image' => @img,
-    "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
-    'Env' => @environment,
-    'Cmd' => @command,
-    'ExposedPorts' => { '80/tcp' => {} },
-    'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
-      '80/tcp' => [{}]}
-    }
-  )
-  @container.start
+  EM::defer do
+    @pull_image = Docker::Image.create('fromImage' => @img)
+    @container = Docker::Container.create(
+      'Image' => @img,
+      "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
+      'Env' => @environment,
+      'Cmd' => @command,
+      'ExposedPorts' => { '80/tcp' => {} },
+      'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
+        '80/tcp' => [{}]}
+      }
+    )
+    @container.start
+  end
   erb :run
 end
 
 get "/admin" do
   if ENV["ADMIN_TWITTER_USER_ID"].to_s == twitter.user.id.to_s
-     @images = Docker::Image.all
-      @cont = Docker::Container.all(all: true)
+    @images = Docker::Image.all
+    @cont = Docker::Container.all(all: true)
   else
     redirect "/"
   end
-erb :admin
+  erb :admin
 end
 
 get "/stop" do
