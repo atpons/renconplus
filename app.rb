@@ -1,3 +1,4 @@
+require 'eventmachine'
 require "docker-api"
 require "sinatra"
 require "dotenv"
@@ -81,19 +82,26 @@ end
 post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
-  @img = @params[:img]
+  @img = @params[:image]
   @environment = empty(@params[:environment])
   @command = empty(@params[:command])
-  EM::defer do
+  @exp_port = Hash.new
+  @bind_port = Hash.new
+  empty(@params[:port]).each do |p|
+    @exp_port["#{p}/tcp"] = {} 
+  end
+  empty(@params[:port]).each do |p|
+    @bind_port["#{p}/tcp"] = [{}]
+  end
+  EM.defer do
     @pull_image = Docker::Image.create('fromImage' => @img)
     @container = Docker::Container.create(
       'Image' => @img,
       "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
       'Env' => @environment,
       'Cmd' => @command,
-      'ExposedPorts' => { '80/tcp' => {} },
-      'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
-        '80/tcp' => [{}]}
+      'ExposedPorts' => @exp_port,
+      'HostConfig' => { 'Privileged' => true, 'PortBindings' => @bind_port
       }
     )
     @container.start
