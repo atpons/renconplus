@@ -1,3 +1,4 @@
+require 'eventmachine'
 require "docker-api"
 require "sinatra"
 require "dotenv"
@@ -6,12 +7,12 @@ require "twitter"
 require "json"
 
 def empty(str)
-   case str.empty?
-   when true
-       return []
-   else
-       return str.split(/\s*,\s*/)
-   end
+  case str.empty?
+  when true
+    return []
+  else
+    return str.split(/\s*,\s*/)
+  end
 end
 
 # Loading env
@@ -58,7 +59,7 @@ get "/auth/not_logged_in" do
 end
 
 after do
-  
+
 end
 
 get '/auth/twitter/callback' do
@@ -81,29 +82,65 @@ end
 post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
-  @img = @params[:img]
+  @img = @params[:image]
   @environment = empty(@params[:environment])
   @command = empty(@params[:command])
-  @container = Docker::Container.create(
-    'Image' => @img,
-    "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
-    'Env' => @environment,
-    'Cmd' => @command,
-    'ExposedPorts' => { '80/tcp' => {} },
-    'HostConfig' => { 'Privileged' => true, 'PortBindings' => {
-      '80/tcp' => [{}]}
-    }
-  )
-  @container.start
+  @exp_port = Hash.new
+  @bind_port = Hash.new
+  empty(@params[:port]).each do |p|
+    @exp_port["#{p}/tcp"] = {} 
+  end
+  empty(@params[:port]).each do |p|
+    @bind_port["#{p}/tcp"] = [{}]
+  end
+  EM.defer do
+    @pull_image = Docker::Image.create('fromImage' => @img)
+    @container = Docker::Container.create(
+      'Image' => @img,
+      "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
+      'Env' => @environment,
+      'Cmd' => @command,
+      'ExposedPorts' => @exp_port,
+      'HostConfig' => { 'Privileged' => true, 'PortBindings' => @bind_port
+      }
+    )
+    @container.start
+  end
   erb :run
+end
+
+get "/admin" do
+  if ENV["ADMIN_TWITTER_USER_ID"].to_s == twitter.user.id.to_s
+    @images = Docker::Image.all
+    @cont = Docker::Container.all(all: true)
+  else
+    redirect "/"
+  end
+  erb :admin
 end
 
 get "/stop" do
   @title = "Stop"
-  @id = params["id"]
+  @id = @params[:id]
   @container = Docker::Container.get(@id)
   @container.stop
   erb :stop
+end
+
+post "/delete" do
+  @title = "Delete"
+  @name = params[:image]
+  Docker::Image.all.each do |i|
+    if i.json["RepoTags"].any?
+      if i.json["RepoTags"][0] == @name
+        @id = i.json["Id"]
+        else
+      end
+    end
+  end
+  image = Docker::Image.get(@id)
+  image.remove(:force => true)
+  redirect "/"
 end
 
 error do

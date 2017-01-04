@@ -1,0 +1,35 @@
+<a href="/logout">Logout</a><br/>
+<h2>Delete Image</h2>
+<form method="post" action="delete">
+<p>
+Choose Image: 
+<select name="image">
+<% @images.each do |img| %>  
+<option value="<%= img.json["RepoTags"][0] %>"><%= img.json["RepoTags"][0] %></option>
+<% end %>
+</select>
+<p><input type="submit" value="Delete Image"></p>
+<h2>All running containers</h2>
+<p>Please watch out not to stop wrong container.</p>
+<table border>
+<tr>
+<td>Container ID</td>
+<td>Image</td>
+<td>Container Name</td>
+<td>Label</td>
+<td>Stop</td>
+</tr>
+<% @cont.each do |entry| %>
+<tr>
+<td><%= entry.json["Id"] %></td>
+<td><%= entry.json["Config"]["Image"] %></td>
+<td><%= entry.json["Name"] %></td>
+<td><%= entry.json["Config"]["Labels"] %></td>
+<td>
+<a href="/stop?id=<%= entry.json["Id"] %>">Stop</a>
+</td>
+</tr>
+<% end %>
+</table>
+
+</p>

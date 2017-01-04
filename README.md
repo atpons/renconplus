@@ -12,6 +12,10 @@ Installation
 + Sinatra
 + swipely/docker-api
 + dotenv
++ eventmachine
++ omniauth
+
+Please read `Gemfile` for some dependence gems.
 
 ### Enable Docker Remote API
 If you only installed Docker, you can't use Rencon.
@@ -37,8 +41,9 @@ Using Rencon
 ### Run
 **IMPORTANT:** You must modify `.env` if your Docker API endpoint is not `http://localhost:4243/`.
 
-
 First, you need `bundle install`, and `app.rb` is Rencon Application.
+
+Second, you need modify `.env` to Twitter Consumer Key / Consumer Secret / Administrator Twitter ID (Integer).
 
 You can run with `ruby app.rb` and getting started.
 
