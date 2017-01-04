@@ -55,6 +55,7 @@ before do
 end
 
 get "/auth/not_logged_in" do
+  @title = "Login"↲   
   erb :not_logged_in
 end
 
@@ -110,6 +111,7 @@ post "/run" do
 end
 
 get "/admin" do
+  @title = "Admin"
   if ENV["ADMIN_TWITTER_USER_ID"].to_s == twitter.user.id.to_s
     @images = Docker::Image.all
     @cont = Docker::Container.all(all: true)
