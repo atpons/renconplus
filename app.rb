@@ -55,7 +55,7 @@ before do
 end
 
 get "/auth/not_logged_in" do
-  @title = "Login"↲   
+  @title = "Login"
   erb :not_logged_in
 end
 
