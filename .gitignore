@@ -1,3 +1,4 @@
+!*.gitkeep
 *.gem
 *.rbc
 /.config
