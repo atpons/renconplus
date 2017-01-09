@@ -10,10 +10,13 @@ Installation
 + Docker
 + Ruby 2.3+
 + Sinatra
-+ swipely/docker-api
+
+#### Gems
++ docker-api
 + dotenv
 + eventmachine
 + omniauth
++ passenger
 
 Please read `Gemfile` for some dependence gems.
 
@@ -45,9 +48,12 @@ First, you need `bundle install`, and `app.rb` is Rencon Application.
 
 Second, you need modify `.env` to Twitter Consumer Key / Consumer Secret / Administrator Twitter ID (Integer).
 
-You can run with `ruby app.rb` and getting started.
+Third, we can run it on Passenger.
 
-If you provide Rencon, you will use a reverse proxy: nginx, Apache, Unicorn
+#### Passenger on Apache2
+Please run `passenger-install-apache2-module` and you add snippet to `httpd.conf`.
+
+And you need set `DocumentRoot` to `/public` and we can use it.
 
 Maybe you can run any containers from Docker Hub.
 
