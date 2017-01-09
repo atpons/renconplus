@@ -119,6 +119,20 @@ get "/admin" do
   erb :admin
 end
 
+get "/wipe" do
+  if ENV["ADMIN_TWITTER_USER_ID"].to_s == twitter.user.id.to_s
+    Docker::Container.all(all: true, filters: { status: ["exited","dead"] }.to_json).each do |i|
+      i.remove
+    end
+    Docker::Image.all(all: true, filters: { dangling: ["true"] }.to_json).each do |i|
+      i.remove
+    end
+    redirect "/"
+  else
+    redirect "/"
+  end
+end
+
 get "/stop" do
   @title = "Stop"
   @id = @params[:id]
