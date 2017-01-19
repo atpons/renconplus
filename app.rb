@@ -86,6 +86,7 @@ post "/run" do
   @img = @params[:image]
   @environment = empty(@params[:environment])
   @command = empty(@params[:command])
+  @memory = {"128MB" => 134217728}
   @exp_port = Hash.new
   @bind_port = Hash.new
   empty(@params[:port]).each do |p|
@@ -102,7 +103,7 @@ post "/run" do
       'Env' => @environment,
       'Cmd' => @command,
       'ExposedPorts' => @exp_port,
-      'HostConfig' => { 'Privileged' => true, 'PortBindings' => @bind_port
+      'HostConfig' => { "CpuShares" => 1024, "Memory" => @memory[@params[:memory]] , 'Privileged' => true, 'PortBindings' => @bind_port
       }
     )
     @container.start
