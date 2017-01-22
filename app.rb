@@ -134,10 +134,10 @@ post "/run" do
   erb :run
 end
 
-post "/import_yaml" do
-  @oauth = session[:twitter_oauth]
+post "/import_yaml" do 
   @title = "Import Docker Compose File"
   @oauth = session[:twitter_oauth]
+  @screen_name = twitter.user.screen_name
   @id = twitter.user.id.to_s
   @file = Net::HTTP.get URI.parse(@params[:uri])
   yaml = YAML.load(@file)
