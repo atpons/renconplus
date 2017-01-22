@@ -122,32 +122,6 @@ post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
   @id = twitter.user.id.to_s
-=begin
-  @img = @params[:image]
-  @environment = empty(@params[:environment])
-  @command = empty(@params[:command])
-  @memory = {"128MB" => 134217728}
-  @exp_port = Hash.new
-  @bind_port = Hash.new
-  empty(@params[:port]).each do |p|
-    @exp_port["#{p}/tcp"] = {} 
-  end
-  empty(@params[:port]).each do |p|
-    @bind_port["#{p}/tcp"] = [{}]
-  end
-  EM.defer do
-    @pull_image = Docker::Image.create('fromImage' => @img)
-    @container = Docker::Container.create(
-      'Image' => @img,
-      "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
-      'Env' => @environment,
-      'Cmd' => @command,
-      'ExposedPorts' => @exp_port,
-      'HostConfig' => { "CpuShares" => 1024, "Memory" => @memory[@params[:memory]] , 'Privileged' => true, 'PortBindings' => @bind_port
-      }
-    )
-    @container.start
-=end
   container = Container.new(@id,@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
   container.run
   erb :run
