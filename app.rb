@@ -142,12 +142,12 @@ post "/import_yaml" do
   @file = Net::HTTP.get URI.parse(@params[:uri].to_s)
   yaml = YAML.load(@file)
   yaml.first.each{|key,val|
-    unless val["environment"].nil?
+    if val["environment"].nil?
+    else
     val["environment"].each do |x|
       @env = x.join("=")
     end
-    else
-      @env = []
+          @env = []
     end
     container = Container.new("x",val["image"],@env,fill(val["command"]).split,@params[:memory].to_s,fill(val["ports"])) 
   }
