@@ -148,7 +148,6 @@ post "/run" do
 =end
   Container.new(@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
   Container.run()
-  end
   erb :run
 end
 
