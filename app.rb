@@ -144,9 +144,9 @@ post "/import_yaml" do
     unless val["environment"].nil?
     val["environment"].each do |x|
       @env = x.join("=")
+    end
     else
       @env = []
-    end
     end
     container = Container.new(@id,val["image"],@env,fill(val["command"]).split,@params[:memory],fill(val["ports"]))
   }
