@@ -1,0 +1,13 @@
+<a href="/logout">Logout</a><br/>
+<p>Welcome,  <%= @screen_name %>!</p>
+<form method="post" action="import_yaml">
+<p>
+Your YAML file:
+<p>Image: <input type="text" name="uri" size="40"></p>
+<p>Importing from docker-compose.yml is available by Gist.</p>
+</select>
+</p>
+<p>Memory: <input type="radio" name="memory" value="128MB" checked> 128MB</p>
+<p><input type="submit" value="Launch"></p>
+<p>Binding port is automatically ports to random ports.</p>
+</form>
