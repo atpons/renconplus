@@ -135,6 +135,7 @@ post "/run" do
 end
 
 post "/import_yaml" do
+  @oauth = session[:twitter_oauth]
   @title = "Import Docker Compose File"
   @oauth = session[:twitter_oauth]
   @id = twitter.user.id.to_s
