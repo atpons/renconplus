@@ -141,7 +141,8 @@ post "/import_yaml" do
   @id = twitter.user.id.to_s
   @file = Net::HTTP.get URI.parse(@params[:uri].to_s)
   yaml = YAML.load(@file)
-  yaml.first.each{|key,val|
+  hash = Hash[*yaml.first]
+  hash.each{|key,val|
     if val["environment"].nil?
     else
     val["environment"].each do |x|
@@ -149,7 +150,7 @@ post "/import_yaml" do
     end
           @env = []
     end
-    container = Container.new("x",val["image"],@env,fill(val["command"]).split,@params[:memory].to_s,fill(val["ports"])) 
+    container = Container.new(@id,val["image"],@env,fill(val["command"]).split,@params[:memory].to_s,fill(val["ports"])) 
   }
   erb :run
 end
