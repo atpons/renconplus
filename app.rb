@@ -20,7 +20,6 @@ def fill(str)
   end
 end
 
-end
 
 def empty(str)
   case str.empty?
