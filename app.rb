@@ -6,6 +6,10 @@ require "omniauth-twitter"
 require "twitter"
 require "json"
 
+Docker.url = ENV["DOCKER_HOST"]
+set :environment, :production
+set :bind, '0.0.0.0'
+
 def empty(str)
   case str.empty?
   when true
@@ -15,17 +19,48 @@ def empty(str)
   end
 end
 
+class Container
+  def initialize(id,image,env,cmd,memory,port)
+    @id = id
+    @image = image
+    @env = empty(env)
+    @cmd = empty(cmd)
+    @memory = memory
+    @available_memory = {"128MB" => 134217728}
+    @memory = memory
+    @port = port
+    @exp_port = Hash.new
+    @bind_port = Hash.new
+    empty(port).each do |p|
+      @exp_port["#{p}/tcp"] = {} 
+    end
+    empty(port).each do |p|
+      @bind_port["#{p}/tcp"] = [{}]
+    end
+  end
+  def run
+    EM.defer do
+      @pull_image = Docker::Image.create('fromImage' => @image)
+      @container = Docker::Container.create(
+        'Image' => @image,
+        "Labels" => {"com.rencon.atpons.userid"=> @id },
+        'Env' => @env,
+        'Cmd' => @cmd,
+        'ExposedPorts' => @exp_port,
+        'HostConfig' => { "CpuShares" => 1024, "Memory" => @available_memory[@memory] , 'Privileged' => true, 'PortBindings' => @bind_port
+      }
+      )
+      @container.start
+    end
+  end
+end
+
 # Loading env
 Dotenv.load
 if ENV["TWITTER_CONSUMER_KEY"] == "" || ENV["TWITTER_CONSUME_SECRET"] == ""
   puts "You must put Twitter API Keys to .env file, please visit: https://apps.twitter.com"
   exit
 end
-
-
-set :environment, :production
-set :bind, '0.0.0.0'
-Docker.url = ENV["DOCKER_HOST"]
 
 configure do
   enable :sessions
@@ -60,7 +95,6 @@ get "/auth/not_logged_in" do
 end
 
 after do
-
 end
 
 get '/auth/twitter/callback' do
@@ -83,31 +117,9 @@ end
 post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
-  @img = @params[:image]
-  @environment = empty(@params[:environment])
-  @command = empty(@params[:command])
-  @memory = {"128MB" => 134217728}
-  @exp_port = Hash.new
-  @bind_port = Hash.new
-  empty(@params[:port]).each do |p|
-    @exp_port["#{p}/tcp"] = {} 
-  end
-  empty(@params[:port]).each do |p|
-    @bind_port["#{p}/tcp"] = [{}]
-  end
-  EM.defer do
-    @pull_image = Docker::Image.create('fromImage' => @img)
-    @container = Docker::Container.create(
-      'Image' => @img,
-      "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
-      'Env' => @environment,
-      'Cmd' => @command,
-      'ExposedPorts' => @exp_port,
-      'HostConfig' => { "CpuShares" => 1024, "Memory" => @memory[@params[:memory]] , 'Privileged' => true, 'PortBindings' => @bind_port
-      }
-    )
-    @container.start
-  end
+  @id = twitter.user.id.to_s
+  container = Container.new(@id,@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
+  container.run
   erb :run
 end
 
@@ -151,7 +163,7 @@ post "/delete" do
     if i.json["RepoTags"].any?
       if i.json["RepoTags"][0] == @name
         @id = i.json["Id"]
-        else
+      else
       end
     end
   end
