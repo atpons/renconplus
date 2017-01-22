@@ -149,7 +149,8 @@ post "/import_yaml" do
     else
       @env = []
     end
-    container = Container.new(@id,val["image"],@env,fill(val["command"]).split,@params[:memory],fill(val["ports"]))
+    container = Container.new("x",val["image"],@env,fill(val["command"]).split,@params[:memory],fill(val["ports"]))
+    
   }
   erb :run
 end
