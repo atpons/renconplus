@@ -62,9 +62,6 @@ if ENV["TWITTER_CONSUMER_KEY"] == "" || ENV["TWITTER_CONSUME_SECRET"] == ""
   exit
 end
 
-
-
-
 configure do
   enable :sessions
   use OmniAuth::Builder do
@@ -98,7 +95,6 @@ get "/auth/not_logged_in" do
 end
 
 after do
-
 end
 
 get '/auth/twitter/callback' do
