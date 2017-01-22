@@ -39,7 +39,7 @@ class Container
   end
   def run
     EM.defer do
-      @pull_image = Docker::Image.create('fromImage' => @img)
+      @pull_image = Docker::Image.create('fromImage' => @image)
       @container = Docker::Container.create(
         'Image' => @image,
         "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
@@ -146,8 +146,8 @@ post "/run" do
     )
     @container.start
 =end
-  Container.new(@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
-  Container.run()
+  container = Container.new(@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
+  container.run
   erb :run
 end
 
