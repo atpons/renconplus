@@ -15,6 +15,41 @@ def empty(str)
   end
 end
 
+class Container
+  def initialize(image,env,cmd,memory,port)
+    @image = image
+    @env = empty(env)
+    @cmd = empty(cmd)
+    @memory = memory
+    @available_memory = {"128MB" => 134217728}
+    @memory = memory
+    @port = port
+    @exp_port = Hash.new
+    @bind_port = Hash.new
+    empty(port).each do |p|
+      @exp_port["#{p}/tcp"] = {} 
+    end
+    empty(port).each do |p|
+      @bind_port["#{p}/tcp"] = [{}]
+    end
+  end
+  def run()
+   EM.defer do
+    @pull_image = Docker::Image.create('fromImage' => @img)
+    @container = Docker::Container.create(
+      'Image' => @image,
+      "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
+      'Env' => @env,
+      'Cmd' => @cmd,
+      'ExposedPorts' => @exp_port,
+      'HostConfig' => { "CpuShares" => 1024, "Memory" => available_memory[memory] , 'Privileged' => true, 'PortBindings' => @bind_port
+      }
+    )
+    @container.start
+  end
+end
+
+
 # Loading env
 Dotenv.load
 if ENV["TWITTER_CONSUMER_KEY"] == "" || ENV["TWITTER_CONSUME_SECRET"] == ""
@@ -83,6 +118,7 @@ end
 post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
+=begin
   @img = @params[:image]
   @environment = empty(@params[:environment])
   @command = empty(@params[:command])
@@ -107,6 +143,9 @@ post "/run" do
       }
     )
     @container.start
+=end
+  Container.new(@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
+  Container.run()
   end
   erb :run
 end
