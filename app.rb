@@ -139,7 +139,7 @@ post "/import_yaml" do
   @oauth = session[:twitter_oauth]
   @screen_name = twitter.user.screen_name
   @id = twitter.user.id.to_s
-  @file = Net::HTTP.get URI.parse(@params[:uri])
+  @file = Net::HTTP.get URI.parse(@params[:uri].to_s)
   yaml = YAML.load(@file)
   yaml.each{|key,val|
     unless val["environment"].nil?
