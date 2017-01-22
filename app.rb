@@ -143,14 +143,13 @@ post "/import_yaml" do
   yaml = YAML.load(@file)
   yaml.each{|key,val|
     unless val["environment"].nil?
-    val["environment"].each do |x|
+    val["environment"].first.each do |x|
       @env = x.join("=")
     end
     else
       @env = []
     end
-    container = Container.new("x",val["image"],@env,fill(val["command"]).split,@params[:memory],fill(val["ports"]))
-    
+    container = Container.new("x",val["image"].first,@env,fill(val["command"].first).split,@params[:memory].to_s,fill(val["ports"].first)) 
   }
   erb :run
 end
