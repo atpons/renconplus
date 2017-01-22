@@ -12,6 +12,16 @@ Docker.url = ENV["DOCKER_HOST"]
 set :environment, :production
 set :bind, '0.0.0.0'
 
+def fill(str)
+  if str.nil?
+    return []
+  else
+    return str
+  end
+end
+
+end
+
 def empty(str)
   case str.empty?
   when true
@@ -132,10 +142,14 @@ post "/import_yaml" do
   @file = Net::HTTP.get URI.parse(@params[:uri])
   yaml = YAML.load(@file)
   yaml.each{|key,val|
+    unless val["environment"].nil?
     val["environment"].each do |x|
       @env = x.join("=")
+    else
+      @env = []
     end
-    container = Container.new(@id,val["image"],@env,val["command"].split,@params[:memory],val["ports"])
+    end
+    container = Container.new(@id,val["image"],@env,fill(val["command"]).split,@params[:memory],fill(val["ports"]))
   }
   erb :run
 end
