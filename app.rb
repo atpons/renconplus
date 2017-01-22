@@ -47,7 +47,7 @@ class Container
         'Env' => @env,
         'Cmd' => @cmd,
         'ExposedPorts' => @exp_port,
-        'HostConfig' => { "CpuShares" => 1024, "Memory" => available_memory[memory] , 'Privileged' => true, 'PortBindings' => @bind_port
+        'HostConfig' => { "CpuShares" => 1024, "Memory" => @available_memory[@memory] , 'Privileged' => true, 'PortBindings' => @bind_port
       }
       )
       @container.start
