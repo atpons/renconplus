@@ -38,21 +38,21 @@ class Container
     end
   end
   def run()
-   EM.defer do
-    @pull_image = Docker::Image.create('fromImage' => @img)
-    @container = Docker::Container.create(
-      'Image' => @image,
-      "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
-      'Env' => @env,
-      'Cmd' => @cmd,
-      'ExposedPorts' => @exp_port,
-      'HostConfig' => { "CpuShares" => 1024, "Memory" => available_memory[memory] , 'Privileged' => true, 'PortBindings' => @bind_port
+    EM.defer do
+      @pull_image = Docker::Image.create('fromImage' => @img)
+      @container = Docker::Container.create(
+        'Image' => @image,
+        "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
+        'Env' => @env,
+        'Cmd' => @cmd,
+        'ExposedPorts' => @exp_port,
+        'HostConfig' => { "CpuShares" => 1024, "Memory" => available_memory[memory] , 'Privileged' => true, 'PortBindings' => @bind_port
       }
-    )
-    @container.start
+      )
+      @container.start
+    end
   end
 end
-
 
 # Loading env
 Dotenv.load
@@ -191,7 +191,7 @@ post "/delete" do
     if i.json["RepoTags"].any?
       if i.json["RepoTags"][0] == @name
         @id = i.json["Id"]
-        else
+      else
       end
     end
   end
