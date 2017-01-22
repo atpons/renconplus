@@ -37,7 +37,7 @@ class Container
       @bind_port["#{p}/tcp"] = [{}]
     end
   end
-  def run()
+  def run
     EM.defer do
       @pull_image = Docker::Image.create('fromImage' => @img)
       @container = Docker::Container.create(
