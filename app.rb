@@ -5,6 +5,8 @@ require "dotenv"
 require "omniauth-twitter"
 require "twitter"
 require "json"
+require "net/http"
+require "yaml"
 
 Docker.url = ENV["DOCKER_HOST"]
 set :environment, :production
@@ -121,6 +123,25 @@ post "/run" do
   container = Container.new(@id,@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
   container.run
   erb :run
+end
+
+post "/import_yaml" do
+  @title = "Import Docker Compose File"
+  @oauth = session[:twitter_oauth]
+  @id = twitter.user.id.to_s
+  @file = Net::HTTP.get URI.parse(@params[:uri])
+  yaml = YAML.load(@file)
+  yaml.each{|key,val|
+    val["environment"].each do |x|
+      @env = x.join("=")
+    end
+    container = Container.new(@id,val["image"],@env,val["command"].split,@params[:memory],val["ports"])
+  }
+  erb :run
+end
+
+get "/import" do
+  erb :import
 end
 
 get "/admin" do
