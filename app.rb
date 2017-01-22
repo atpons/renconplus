@@ -6,6 +6,10 @@ require "omniauth-twitter"
 require "twitter"
 require "json"
 
+Docker.url = ENV["DOCKER_HOST"]
+set :environment, :production
+set :bind, '0.0.0.0'
+
 def empty(str)
   case str.empty?
   when true
@@ -58,9 +62,7 @@ if ENV["TWITTER_CONSUMER_KEY"] == "" || ENV["TWITTER_CONSUME_SECRET"] == ""
 end
 
 
-set :environment, :production
-set :bind, '0.0.0.0'
-Docker.url = ENV["DOCKER_HOST"]
+
 
 configure do
   enable :sessions
