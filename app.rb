@@ -155,6 +155,9 @@ post "/import_yaml" do
 end
 
 get "/import" do
+    @oauth = session[:twitter_oauth]
+  @screen_name = twitter.user.screen_name
+  @id = twitter.user.id.to_s
   erb :import
 end
 
