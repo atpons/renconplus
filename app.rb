@@ -20,7 +20,8 @@ def empty(str)
 end
 
 class Container
-  def initialize(image,env,cmd,memory,port)
+  def initialize(id,image,env,cmd,memory,port)
+    @id = id
     @image = image
     @env = empty(env)
     @cmd = empty(cmd)
@@ -42,7 +43,7 @@ class Container
       @pull_image = Docker::Image.create('fromImage' => @image)
       @container = Docker::Container.create(
         'Image' => @image,
-        "Labels" => {"com.rencon.atpons.userid"=> twitter.user.id.to_s },
+        "Labels" => {"com.rencon.atpons.userid"=> @id },
         'Env' => @env,
         'Cmd' => @cmd,
         'ExposedPorts' => @exp_port,
@@ -120,6 +121,7 @@ end
 post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
+  @id = twitter.user.id.to_s
 =begin
   @img = @params[:image]
   @environment = empty(@params[:environment])
@@ -146,7 +148,7 @@ post "/run" do
     )
     @container.start
 =end
-  container = Container.new(@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
+  container = Container.new(@id,@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
   container.run
   erb :run
 end
