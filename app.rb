@@ -16,7 +16,17 @@ def fill(str)
   if str.nil?
     return []
   else
-    return str
+    return str.join(",")
+  end
+end
+
+def space(str)
+  if str == nil
+    return nil
+  elsif str == []
+    return nil
+  else
+    return str.split
   end
 end
 
@@ -148,9 +158,9 @@ post "/import_yaml" do
     val["environment"].each do |x|
       @env = x.join("=")
     end
-          @env = []
+      @env = []
     end
-    container = Container.new(@id,val["image"],@env,fill(val["command"]).split,@params[:memory].to_s,fill(val["ports"])) 
+    container = Container.new(@id,val["image"],@env.join(","),space(val["command"]),@params[:memory].to_s,fill(val["ports"])) 
   }
   erb :run
 end
