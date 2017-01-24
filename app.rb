@@ -62,9 +62,11 @@ class Container
     end
   end
   def imp
+    p "PORT SORT"
     @port.each do |p|
       @exp_port["#{p}/tcp"] = {} 
     end
+    p "PORT SORT2"
     @port.each do |p|
       @bind_port["#{p}/tcp"] = [{}]
     end
