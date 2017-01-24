@@ -52,10 +52,20 @@ class Container
     @port = port
     @exp_port = Hash.new
     @bind_port = Hash.new
-    empty(port).each do |p|
+  end
+  def init_web
+    empty(@port).each do |p|
       @exp_port["#{p}/tcp"] = {} 
     end
-    empty(port).each do |p|
+    empty(@port).each do |p|
+      @bind_port["#{p}/tcp"] = [{}]
+    end
+  end
+    def init_import
+    @port.each do |p|
+      @exp_port["#{p}/tcp"] = {} 
+    end
+    @port.each do |p|
       @bind_port["#{p}/tcp"] = [{}]
     end
   end
@@ -140,6 +150,7 @@ post "/run" do
   @oauth = session[:twitter_oauth]
   @id = twitter.user.id.to_s
   container = Container.new(@id,@params[:image],empty(@params[:environment]),empty(@params[:command]),@params[:memory],@params[:port])
+  container.init_web
   container.run
   erb :run
 end
@@ -153,19 +164,21 @@ post "/import_yaml" do
   yaml = YAML.load(@file)
   hash = Hash[*yaml.first]
   hash.each{|key,val|
-  case val["command"]
-  when nil
-    @command = nil
-  else
-    @command = val["command"].split
-  end
-  container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
+    case val["command"]
+    when nil
+      @command = nil
+    else
+      @command = val["command"].split
+    end
+    container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
   }
+  container.init_import
+  container.run
   erb :run
 end
 
 get "/import" do
-    @oauth = session[:twitter_oauth]
+  @oauth = session[:twitter_oauth]
   @screen_name = twitter.user.screen_name
   @id = twitter.user.id.to_s
   erb :import
