@@ -1,4 +1,3 @@
-require 'eventmachine'
 require "docker-api"
 require "sinatra"
 require "dotenv"
@@ -7,7 +6,6 @@ require "twitter"
 require "json"
 require "net/http"
 require "yaml"
-require 'parallel'
 
 Docker.url = ENV["DOCKER_HOST"]
 set :environment, :production
@@ -177,9 +175,9 @@ post "/import_yaml" do
     end
     @container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory],val["ports"]) 
   @container.imp
-  puts "DEBUG: #{@id},#{val["image"]},#{val["environment"]},#{@command},#{@params[:memory]},#{val["ports"]}"
   @container.run
   }
+  erb :run
 end
 
 get "/import" do
