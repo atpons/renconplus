@@ -61,7 +61,7 @@ class Container
       @bind_port["#{p}/tcp"] = [{}]
     end
   end
-    def init_import
+  def imp
     @port.each do |p|
       @exp_port["#{p}/tcp"] = {} 
     end
@@ -149,13 +149,13 @@ post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
   @id = twitter.user.id.to_s
-  container = Container.new(@id,@params[:image],empty(@params[:environment]),empty(@params[:command]),@params[:memory],@params[:port])
-  container.init_web
-  container.run
+  @container = Container.new(@id,@params[:image],empty(@params[:environment]),empty(@params[:command]),@params[:memory],@params[:port])
+  @container.init_web
+  @container.run
   erb :run
 end
 
-post "/import_yaml" do 
+post "/import_yaml" do
   @title = "Import Docker Compose File"
   @oauth = session[:twitter_oauth]
   @screen_name = twitter.user.screen_name
@@ -170,11 +170,10 @@ post "/import_yaml" do
     else
       @command = val["command"].split
     end
-    container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
+    @container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
   }
-  container.init_import
-  container.run
-  erb :run
+  @container.imp
+  @container.run
 end
 
 get "/import" do
