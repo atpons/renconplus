@@ -73,7 +73,8 @@ class Container
   end
   def run
     EM.defer do
-      @pull_image = Docker::Image.create('fromImage' => @image)
+      puts "Pulling"
+      Docker::Image.create('fromImage' => @image)
       puts "Pulled!"
       @container = Docker::Container.create(
         'Image' => @image,
