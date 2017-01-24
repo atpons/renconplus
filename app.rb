@@ -171,9 +171,9 @@ post "/import_yaml" do
       @command = val["command"].split
     end
     @container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
-  }
   @container.imp
   @container.run
+  }
 end
 
 get "/import" do
