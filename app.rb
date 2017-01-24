@@ -7,6 +7,7 @@ require "twitter"
 require "json"
 require "net/http"
 require "yaml"
+require 'parallel'
 
 Docker.url = ENV["DOCKER_HOST"]
 set :environment, :production
@@ -72,10 +73,9 @@ class Container
     end
   end
   def run
-    EM.defer do
-      puts "Pulling"
+    th = Thread.start{
+      puts "[*] Container pulling and deploy"
       Docker::Image.create('fromImage' => @image)
-      puts "Pulled!"
       @container = Docker::Container.create(
         'Image' => @image,
         "Labels" => {"com.rencon.atpons.userid"=> @id },
@@ -86,7 +86,8 @@ class Container
       }
       )
       @container.start
-    end
+      puts "[-] Container pulling and deploy"
+    }
   end
 end
 
