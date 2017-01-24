@@ -170,9 +170,9 @@ post "/import_yaml" do
     else
       @command = val["command"].split
     end
-    @container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
+    @container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory],val["ports"]) 
   @container.imp
-  puts "DEBUG: #{@id},#{val["image"]},#{val["environment"]},#{@command},#{@params[:memory].to_s},#{val["ports"]}"
+  puts "DEBUG: #{@id},#{val["image"]},#{val["environment"]},#{@command},#{@params[:memory]},#{val["ports"]}"
   @container.run
   }
 end
