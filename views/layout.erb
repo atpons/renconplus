@@ -8,11 +8,6 @@
     <h1>Rencon Plus</h1>
     <h2>Container as a service</h2>
     <table><tr><td>Top</td><td>Import Compose file</td></tr></table>
-    <% unless env['omniauth.auth'][:credentials] == nil then %>
-    <table><tr><td>Top</td><td>Import Compose file</td><td>Logout</td></tr></table>
-    <% else %>
-    <table><tr><td>Top(Login)</td></tr></table>
-    <% end %>
     <hr>
     <%= yield %>
     <hr>
