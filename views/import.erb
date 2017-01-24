@@ -1,10 +1,11 @@
-<a href="/logout">Logout</a><br/>
+<table><tr><td><a href="/logout">Logout</a></td><td><a href="/import">Import Compose File</a></td></tr></table>
 <p>Welcome,  <%= @screen_name %>!</p>
 <form method="post" action="import_yaml">
 <p>
-Your YAML file:
+Your Compose File:
 <p>Image: <input type="text" name="uri" size="40"></p>
 <p>Importing from docker-compose.yml is available by Gist.</p>
+<p>Notice: Supporting options are only Image, Environment, Command, Ports.</p>
 </select>
 </p>
 <p>Memory: <input type="radio" name="memory" value="128MB" checked> 128MB</p>
