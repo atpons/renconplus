@@ -44,8 +44,8 @@ class Container
   def initialize(id,image,env,cmd,memory,port)
     @id = id
     @image = image
-    @env = empty(env)
-    @cmd = empty(cmd)
+    @env = env
+    @cmd = cmd
     @memory = memory
     @available_memory = {"128MB" => 134217728}
     @memory = memory
@@ -139,7 +139,7 @@ post "/run" do
   @title = "Run"
   @oauth = session[:twitter_oauth]
   @id = twitter.user.id.to_s
-  container = Container.new(@id,@params[:image],@params[:environment],@params[:command],@params[:memory],@params[:port])
+  container = Container.new(@id,@params[:image],empty(@params[:environment]),empty(@params[:command]),@params[:memory],@params[:port])
   container.run
   erb :run
 end
@@ -153,14 +153,13 @@ post "/import_yaml" do
   yaml = YAML.load(@file)
   hash = Hash[*yaml.first]
   hash.each{|key,val|
-    if val["environment"].nil?
-    else
-    val["environment"].each do |x|
-      @env = x.join("=")
-    end
-      @env = []
-    end
-    container = Container.new(@id,val["image"],@env.join(","),space(val["command"]),@params[:memory].to_s,fill(val["ports"])) 
+  case val["command"]
+  when nil
+    @command = nil
+  else
+    @command = val["command"].split
+  end
+  container = Container.new(@id,val["image"],val["environment"],@command,@params[:memory].to_s,val["ports"]) 
   }
   erb :run
 end
